@@ -5,4 +5,49 @@
   tasks:
     - name: Print URL
       ansible.builtin.debug:
+        msg: URL = "{{ URL }} is the URL"
+
+- name: Demo on file variables
+  hosts: all
+  vars_file:
+    - sample-vars.yml
+  tasks:
+    - name: Print URL
+      ansible.builtin.debug:
         msg: URL = {{URL}}
+
+## Variables can be accessed as , spaces are not mandatory
+# {{VAR_NAME}} or {{ VAR_NAME }}
+
+- name: Task level variables
+  hosts: all
+  tasks:
+    - name: Print URL
+      ansible.builtin.debug:
+        msg: URL = {{ URL }}
+      vars:
+        URL: task.example.com
+
+- name: variable from inventory
+  hosts: all
+  tasks:
+    - name: Print URL
+      ansible.builtin.debug:
+        msg: URL == {{ URL }}
+
+- name: Print Fact
+  hosts: all
+  tasks:
+    - ansible.builtin.debug:
+        msg: Hostname = {{ ansible_hostname }}
+
+- name: Register a variable example
+  hosts: all
+  tasks:
+    - name: Get Uptime
+      ansible.builtin.shell: uptime
+      register: out
+
+      - name: Print out register
+        ansible.builtin.debug:
+          msg: "{{out.stdout}}"
